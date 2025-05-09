@@ -10,7 +10,7 @@ const publicRoutes = createRouteMatcher([
   "/api/design"
 ]);
 
-export default clerkMiddleware(async (auth, req) => {
+export default clerkMiddleware((req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     const response = new NextResponse(null, { status: 204 });
@@ -26,10 +26,10 @@ export default clerkMiddleware(async (auth, req) => {
     return NextResponse.next();
   }
   
-  // For protected routes, check authentication status
-  const authObject = await auth();
-  if (!authObject.userId) {
-    return authObject.redirectToSignIn({ returnBackUrl: req.url });
+  // For protected routes, check authentication status from the request
+  const { userId } = req.auth;
+  if (!userId) {
+    return req.auth.redirectToSignIn({ returnBackUrl: req.url });
   }
   
   // User is authenticated, allow request to proceed
