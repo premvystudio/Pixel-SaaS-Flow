@@ -13,11 +13,16 @@ const publicRoutes = createRouteMatcher([
 export default clerkMiddleware((req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    const response = new NextResponse(null, { status: 204 });
-    response.headers.set('Access-Control-Allow-Credentials', 'true');
-    response.headers.set('Access-Control-Allow-Origin', req.headers.get('origin') || '*');
-    response.headers.set('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-    response.headers.set('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+    const origin = req.headers.get('origin') || '*';
+    const response = new NextResponse(null, { 
+      status: 204,
+      headers: {
+        'Access-Control-Allow-Credentials': 'true',
+        'Access-Control-Allow-Origin': origin,
+        'Access-Control-Allow-Methods': 'GET,OPTIONS,PATCH,DELETE,POST,PUT',
+        'Access-Control-Allow-Headers': 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+      }
+    });
     return response;
   }
   
@@ -34,16 +39,6 @@ export default clerkMiddleware((req) => {
   
   // User is authenticated, allow request to proceed
   return NextResponse.next();
-}, {
-  // Enable debugging in development for better troubleshooting
-  debug: process.env.NODE_ENV === 'development',
-  
-  // Include both localhost:3000 and localhost:3002 for local development
-  authorizedParties: [
-    process.env.NEXT_PUBLIC_CLERK_FRONTEND_API,
-    'http://localhost:3000',
-    'http://localhost:3002'
-  ]
 });
 
 // Use the recommended matcher configuration from both Clerk and Next.js docs
