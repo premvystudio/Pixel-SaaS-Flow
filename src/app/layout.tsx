@@ -2,6 +2,9 @@ import React from 'react';
 import './globals.css';
 import type { Metadata } from 'next';
 import { ClerkProvider } from '@clerk/nextjs';
+import { Inter } from 'next/font/google';
+
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Pixel & Flow',
@@ -15,8 +18,8 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body>
+      <html lang="en" className={inter.className}>
+        <body className="min-h-screen bg-background">
           {children}
         </body>
       </html>
