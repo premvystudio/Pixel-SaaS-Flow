@@ -12,7 +12,14 @@ const nextConfig = {
   },
   experimental: {
     // Optimize package imports for authentication libraries
-    optimizePackageImports: ['@clerk/nextjs'],
+    optimizePackageImports: [
+      '@clerk/nextjs',
+      'lucide-react',
+      'class-variance-authority',
+      'tailwind-merge'
+    ],
+    // Improve code splitting
+    optimizeCss: true,
   },
   images: {
     remotePatterns: [
@@ -29,8 +36,23 @@ const nextConfig = {
         hostname: 'public.blob.vercel-storage.com',
       },
     ],
+    // Enable image optimization
+    unoptimized: false,
+    // Default responsive sizes
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
   },
-  // Server Actions are stable in Next.js 15, so we don't need the experimental flag
+  // Improve production performance
+  poweredByHeader: false,
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+  // Configure caching
+  onDemandEntries: {
+    // Keep unused pages in memory for longer during development
+    maxInactiveAge: 60 * 1000,
+    // Number of pages to keep in memory
+    pagesBufferLength: 5,
+  },
 };
 
 module.exports = nextConfig;
